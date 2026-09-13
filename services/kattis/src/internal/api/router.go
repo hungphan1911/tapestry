@@ -27,16 +27,16 @@ func (s *Server) registerHealthRoutes(mux *http.ServeMux) {
 }
 
 func (s *Server) registerProblemsetRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /problemsets", nil)
-	mux.HandleFunc("GET /problemsets/completed", nil)
+	mux.HandleFunc("GET /problemsets", handler.ProblemSets)
+	mux.HandleFunc("GET /problemsets/completed", handler.CompletedProblemSets)
 }
 
 func (s *Server) registerStatsRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /stats/summary", nil)
-	mux.HandleFunc("GET /stats/difficulty-distribution", nil)
-	mux.HandleFunc("GET /stats/activity", nil)
+	mux.HandleFunc("GET /stats/summary", handler.Summary)
+	mux.HandleFunc("GET /stats/difficulty-distribution", handler.DifficultyDistribution)
+	mux.HandleFunc("GET /stats/activity", handler.Activity)
 }
 
 func (s *Server) registerDashboardRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /dashboard", nil)
+	mux.HandleFunc("GET /dashboard", handler.Dashboard)
 }
