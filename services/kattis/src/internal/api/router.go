@@ -18,7 +18,8 @@ func NewRouter() http.Handler {
 	server.registerProblemsetRoutes(mux)
 	server.registerStatsRoutes(mux)
 	server.registerDashboardRoutes(mux)
-
+	server.registerSubmissionRoutes(mux)
+	
 	return mux
 }
 
@@ -39,4 +40,8 @@ func (s *Server) registerStatsRoutes(mux *http.ServeMux) {
 
 func (s *Server) registerDashboardRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /dashboard", handler.Dashboard)
+}
+
+func (s *Server) registerSubmissionRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("GET /submissions", handler.Submissions)
 }

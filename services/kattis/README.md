@@ -49,9 +49,7 @@ The service exposes the following endpoints:
 
 - `/problemsets`: This exposes the problem sets available on Kattis, with all of the metadata associated with the user. By problem set, I mean the problem sets available on [this page](https://open.kattis.com/problem-sources). This does not intend to pull every single problem on Kattis down but just the problem sources. The filter features is something to be done from the frontend side.
 
-- `/stats/solved`: This endpoint exposes the number of problems the user has solved so far.
-
-- `/stats/summary`: Return the scalar facts of the user. In particular, the number of solved problems, the current total scure, and average difficulty. 
+- `/stats/summary`: Return the scalar facts of the user. In particular, the number of solved problems, the current total score, and average difficulty. 
 
 - `/stats/difficulty-distribution`: This endpoint exposes the difficulty distribution among the solved problems. For bar chart visualizations.
 
