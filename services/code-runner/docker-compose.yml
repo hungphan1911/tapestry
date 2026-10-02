@@ -1,0 +1,9 @@
+services:
+  code-runner:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      # The backend needs daemon access; execution containers never receive this mount.
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
