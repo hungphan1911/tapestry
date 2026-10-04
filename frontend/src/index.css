@@ -1,0 +1,37 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Change the palette here only; components use these names
+ * (bg-canvas, text-ink, bg-primary ...), never raw hex values.
+ */
+@theme {
+  --font-sans: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --color-canvas: #f7f6f3;
+  --color-surface: #ffffff;
+  --color-line: #e7e5e0;
+  --color-ink: #14171f;
+  --color-muted: #6b7080;
+  --color-subtle: #efede8;
+
+  --color-primary: #1b2540;
+  --color-primary-hover: #2a3760;
+  --color-primary-fg: #ffffff;
+
+  --color-positive: #1e8e5a;
+  --color-negative: #d9482b;
+
+  --radius-card: 0.875rem;
+}
+
+@layer base {
+  html {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    min-height: 100dvh;
+  }
+}
