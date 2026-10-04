@@ -96,74 +96,77 @@ function TransactionForm({ transaction, defaultDate, onDone }: FormProps) {
   const error = save.error ?? remove.error
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <Field label="Date">
-        <Input type="date" required value={date} onChange={(e) => setDate(e.target.value)} />
-      </Field>
-      <Field label="Description">
-        <Input value={description} onChange={(e) => setDescription(e.target.value)} />
-      </Field>
-      <Field label="Amount" hint="Sums work too, e.g. 50+6.7. The formula is kept for editing.">
-        <Input
-          required
-          inputMode="decimal"
-          className="tabular-nums"
-          value={expression}
-          onChange={(e) => setExpression(e.target.value)}
-        />
-      </Field>
-      <Field label="Type">
-        <Select value={effectiveTypeId} onChange={(e) => setTypeId(e.target.value)}>
-          <option value="">None</option>
-          {types.map((t) => (
-            <option key={t.id} value={t.id}>
-              {typeLabels[t.description] ?? t.description}
-            </option>
-          ))}
-        </Select>
-      </Field>
-      <Field label="Category" action={manageLink('category')}>
-        <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-          <option value="">None</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.description}
-            </option>
-          ))}
-        </Select>
-      </Field>
-      <Field label="Card" action={manageLink('card')}>
-        <Select value={cardId} onChange={(e) => setCardId(e.target.value)}>
-          <option value="">None</option>
-          {cards.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.card_name}
-            </option>
-          ))}
-        </Select>
-      </Field>
+    <>
+      <form onSubmit={submit} className="space-y-4">
+        <Field label="Date">
+          <Input type="date" required value={date} onChange={(e) => setDate(e.target.value)} />
+        </Field>
+        <Field label="Description">
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+        </Field>
+        <Field label="Amount" hint="Sums work too, e.g. 50+6.7. The formula is kept for editing.">
+          <Input
+            required
+            inputMode="decimal"
+            className="tabular-nums"
+            value={expression}
+            onChange={(e) => setExpression(e.target.value)}
+          />
+        </Field>
+        <Field label="Type">
+          <Select value={effectiveTypeId} onChange={(e) => setTypeId(e.target.value)}>
+            <option value="">None</option>
+            {types.map((t) => (
+              <option key={t.id} value={t.id}>
+                {typeLabels[t.description] ?? t.description}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <Field label="Category" action={manageLink('category')}>
+          <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+            <option value="">None</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.description}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <Field label="Card" action={manageLink('card')}>
+          <Select value={cardId} onChange={(e) => setCardId(e.target.value)}>
+            <option value="">None</option>
+            {cards.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.card_name}
+              </option>
+            ))}
+          </Select>
+        </Field>
 
-      {error && <p className="text-negative text-sm">{errorMessage(error)}</p>}
+        {error && <p className="text-negative text-sm">{errorMessage(error)}</p>}
 
-      <div className="flex items-center justify-between pt-2">
-        <Button type="submit" disabled={save.isPending}>
-          {transaction ? 'Save changes' : 'Add transaction'}
-        </Button>
-        {transaction && (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              if (window.confirm('Delete this transaction?')) {
-                remove.mutate(transaction.id, { onSuccess: onDone })
-              }
-            }}
-          >
-            Delete
+        <div className="flex items-center justify-between pt-2">
+          <Button type="submit" disabled={save.isPending}>
+            {transaction ? 'Save changes' : 'Add transaction'}
           </Button>
-        )}
-      </div>
+          {transaction && (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                if (window.confirm('Delete this transaction?')) {
+                  remove.mutate(transaction.id, { onSuccess: onDone })
+                }
+              }}
+            >
+              Delete
+            </Button>
+          )}
+        </div>
+      </form>
 
+      {/* Outside the form: React submit events bubble through the component tree. */}
       <ManageDrawer kind={managing} onClose={() => setManaging(null)} />
-    </form>
+    </>
   )
 }
