@@ -48,6 +48,23 @@ func (h *Handler) RegisterRoutes(r chi.Router) {
 		r.Put("/{id}", h.UpdateTransaction)
 		r.Delete("/{id}", h.DeleteTransaction)
 	})
+
+	r.Get("/summary", h.GetSummary)
+
+	r.Route("/budgets/{month}", func(r chi.Router) {
+		r.Get("/", h.GetBudget)
+		r.Put("/", h.SetBudget)
+	})
+
+	r.Route("/recurring", func(r chi.Router) {
+		r.Get("/", h.ListRecurring)
+		r.Post("/", h.CreateRecurring)
+		r.Put("/{id}", h.UpdateRecurring)
+		r.Delete("/{id}", h.DeleteRecurring)
+		r.Post("/{id}/log", h.LogRecurring)
+		r.Put("/{id}/amounts/{month}", h.SetRecurringAmount)
+		r.Delete("/{id}/amounts/{month}", h.DeleteRecurringAmount)
+	})
 }
 
 // Types
@@ -180,6 +197,101 @@ func (h *Handler) DeleteTransaction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondNoContent(w, h.service.DeleteTransaction(r.Context(), id))
+}
+
+// Summary
+
+func (h *Handler) GetSummary(w http.ResponseWriter, r *http.Request) {
+	summary, err := h.service.Summary(r.Context(), r.URL.Query().Get("month"))
+	respond(w, http.StatusOK, summary, err)
+}
+
+// Budgets
+
+func (h *Handler) GetBudget(w http.ResponseWriter, r *http.Request) {
+	budget, err := h.service.GetBudget(r.Context(), chi.URLParam(r, "month"))
+	respond(w, http.StatusOK, budget, err)
+}
+
+func (h *Handler) SetBudget(w http.ResponseWriter, r *http.Request) {
+	var req BudgetRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+	budget, err := h.service.SetBudget(r.Context(), chi.URLParam(r, "month"), req)
+	respond(w, http.StatusOK, budget, err)
+}
+
+// Recurring
+
+func (h *Handler) ListRecurring(w http.ResponseWriter, r *http.Request) {
+	items, err := h.service.ListRecurring(r.Context(), r.URL.Query().Get("month"))
+	respond(w, http.StatusOK, items, err)
+}
+
+func (h *Handler) CreateRecurring(w http.ResponseWriter, r *http.Request) {
+	var req RecurringRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+	item, err := h.service.CreateRecurring(r.Context(), req)
+	respond(w, http.StatusCreated, item, err)
+}
+
+func (h *Handler) UpdateRecurring(w http.ResponseWriter, r *http.Request) {
+	id, ok := parseID(w, r)
+	if !ok {
+		return
+	}
+	var req RecurringRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+	item, err := h.service.UpdateRecurring(r.Context(), id, req)
+	respond(w, http.StatusOK, item, err)
+}
+
+func (h *Handler) DeleteRecurring(w http.ResponseWriter, r *http.Request) {
+	id, ok := parseID(w, r)
+	if !ok {
+		return
+	}
+	respondNoContent(w, h.service.DeleteRecurring(r.Context(), id))
+}
+
+func (h *Handler) SetRecurringAmount(w http.ResponseWriter, r *http.Request) {
+	id, ok := parseID(w, r)
+	if !ok {
+		return
+	}
+	var req RecurringAmountRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+	item, err := h.service.SetRecurringAmount(r.Context(), id, chi.URLParam(r, "month"), req)
+	respond(w, http.StatusOK, item, err)
+}
+
+func (h *Handler) DeleteRecurringAmount(w http.ResponseWriter, r *http.Request) {
+	id, ok := parseID(w, r)
+	if !ok {
+		return
+	}
+	item, err := h.service.DeleteRecurringAmount(r.Context(), id, chi.URLParam(r, "month"))
+	respond(w, http.StatusOK, item, err)
+}
+
+func (h *Handler) LogRecurring(w http.ResponseWriter, r *http.Request) {
+	id, ok := parseID(w, r)
+	if !ok {
+		return
+	}
+	var req LogRecurringRequest
+	if !decodeJSON(w, r, &req) {
+		return
+	}
+	transaction, err := h.service.LogRecurring(r.Context(), id, req)
+	respond(w, http.StatusCreated, transaction, err)
 }
 
 // Helpers
