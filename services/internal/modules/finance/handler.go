@@ -23,31 +23,30 @@ func NewHandler(service Service) *Handler {
 	return &Handler{service: service}
 }
 
+// RegisterRoutes registers the module's routes; main mounts them under /finance.
 func (h *Handler) RegisterRoutes(r chi.Router) {
-	r.Route("/finance", func(r chi.Router) {
-		r.Get("/types", h.ListTypes)
+	r.Get("/types", h.ListTypes)
 
-		r.Route("/categories", func(r chi.Router) {
-			r.Get("/", h.ListCategories)
-			r.Post("/", h.CreateCategory)
-			r.Put("/{id}", h.UpdateCategory)
-			r.Delete("/{id}", h.DeleteCategory)
-		})
+	r.Route("/categories", func(r chi.Router) {
+		r.Get("/", h.ListCategories)
+		r.Post("/", h.CreateCategory)
+		r.Put("/{id}", h.UpdateCategory)
+		r.Delete("/{id}", h.DeleteCategory)
+	})
 
-		r.Route("/cards", func(r chi.Router) {
-			r.Get("/", h.ListCards)
-			r.Post("/", h.CreateCard)
-			r.Put("/{id}", h.UpdateCard)
-			r.Delete("/{id}", h.DeleteCard)
-		})
+	r.Route("/cards", func(r chi.Router) {
+		r.Get("/", h.ListCards)
+		r.Post("/", h.CreateCard)
+		r.Put("/{id}", h.UpdateCard)
+		r.Delete("/{id}", h.DeleteCard)
+	})
 
-		r.Route("/transactions", func(r chi.Router) {
-			r.Get("/", h.ListTransactions)
-			r.Post("/", h.CreateTransaction)
-			r.Get("/{id}", h.GetTransaction)
-			r.Put("/{id}", h.UpdateTransaction)
-			r.Delete("/{id}", h.DeleteTransaction)
-		})
+	r.Route("/transactions", func(r chi.Router) {
+		r.Get("/", h.ListTransactions)
+		r.Post("/", h.CreateTransaction)
+		r.Get("/{id}", h.GetTransaction)
+		r.Put("/{id}", h.UpdateTransaction)
+		r.Delete("/{id}", h.DeleteTransaction)
 	})
 }
 
